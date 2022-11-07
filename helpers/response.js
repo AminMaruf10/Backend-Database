@@ -12,13 +12,25 @@ class _response {
 
             res.status(data && data.status ? 200 : 400)
             res.send(data)
+
             return true
         } catch (error) {
-            console.error('sendResponse response helper Error: ', error)
+            console.error('sendResponse response helper Error', error)
 
-            res.status(400).send(data)
+            res.status(400).send({
+                status: false,
+                error
+            })
+
             return false
         }
+    }
+
+    errorHandler = (err, req, res, next) => {
+        res.status(500).send({
+            status: false,
+            error: err.message
+        })
     }
 }
 

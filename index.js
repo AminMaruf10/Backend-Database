@@ -1,32 +1,28 @@
-const { PrismaClient } = require('@prisma/client')
 const express = require('express')
 const cors = require('cors')
 const routes = require('./routes')
-//Prisma Client
-const prisma = new PrismaClient()
+const response = require('./helpers/response')
+
 const app = express()
 const port = 8000
 
-//Handle Cors, Form Data, and Json
 app.use(cors())
-app.use(express.urlencoded({ extended: true}))
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
-//Rest API Routes
+// Welcome API
 app.get('/', async (req, res) => {
-    res.send({
-        message: 'Hello this is API from Express'
+    res.status(200).send({
+        status: true,
+        data: 'Welcome to API Todo List and Express'
     })
 })
 
-//Routes API
+// Routes API
 routes(app)
 
-
-app.get('/users', async (req, res) => {
-    const users = await prisma.user.findMany()
-    res.json(users)
-})
+// Global Error Handler
+app.use(response.errorHandler)
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`)
